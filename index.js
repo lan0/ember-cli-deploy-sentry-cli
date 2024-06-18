@@ -52,23 +52,17 @@ module.exports = {
           ? `--url-prefix ${this.readConfig("urlPrefix")}`
           : "";
 
+        this.log("SENTRY: Injecting debug ids...");
+        this.sentryCliExec("sourcemaps", `inject ${assetsDir}`);
+
         this.log("SENTRY: Creating release...");
         this.sentryCliExec("releases", `new "${releaseName}"`);
 
-        this.log("SENTRY: Assigning commits...");
-        this.sentryCliExec(
-          "releases",
-          `set-commits "${releaseName}" --auto --ignore-missing --ignore-empty`
-        );
-
         this.log("SENTRY: Uploading source maps...");
         this.sentryCliExec(
-          "releases",
-          `files "${releaseName}" upload-sourcemaps --rewrite ${assetsDir} ${urlPrefix}`
+          "sourcemaps",
+          `upload --release=${releaseName} --url-prefix=${urlPrefix} ${assetsDir}`
         );
-
-        this.log("SENTRY: Finalizing release...");
-        this.sentryCliExec("releases", `finalize "${releaseName}"`);
 
         this.log("SENTRY: Release published!...");
       },
