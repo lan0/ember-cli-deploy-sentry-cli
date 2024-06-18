@@ -95,17 +95,17 @@ module.exports = {
         const appName = this.readConfig("appName");
         const url = this.readConfig("url");
 
-        return this._exec(
-          [
-            sentryCliAbsoluteBinLocation,
-            url ? `--url ${url}` : "",
-            `--auth-token ${authToken}`,
-            command,
-            `--org ${orgName}`,
-            `--project ${appName}`,
-            subCommand,
-          ].join(" ")
-        );
+        const cmd =
+        [
+          sentryCliAbsoluteBinLocation,
+          url ? `--url ${url}` : "",
+          `--auth-token ${authToken}`,
+          command,
+          `--org ${orgName}`,
+          `--project ${appName}`,
+          subCommand,
+        ].join(" ");
+        return this._exec(cmd);
       },
 
       _exec(command = "") {
